@@ -76,3 +76,5 @@ async function getGamesByTitle(title) {
     console.error(error.message);
   }
 }
+
+// SALUT CEEST MOi
