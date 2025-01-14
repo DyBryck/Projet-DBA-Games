@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
   <head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,10 +14,13 @@
   </head>
   <body>
     <header>
-      <img src="images/DBAGamesLogo.jpeg" alt="" class="imageLogoDBA" />
+      <img
+        src="./assets/images/DBAGamesLogo.jpeg"
+        alt=""
+        class="imageLogoDBA"
+      />
       <div class="recherche">
         <button class="btnRechercher" onclick="searchGame()"></button>
-
         <input
           type="text"
           id="search-input"
@@ -26,6 +29,7 @@
       </div>
     </header>
     <main>
+      <div class="modal"></div>
       <nav>
         <a class="links-Hot" href="Home">Home</a>
         <a class="links-Hot" href="Tendances">Tendances</a>
@@ -50,7 +54,6 @@
         </div>
       </div>
     </main>
-
     <script src="script.js"></script>
   </body>
 </html>

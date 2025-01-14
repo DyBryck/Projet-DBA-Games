@@ -3,10 +3,9 @@ let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
 
 // Affiche la liste des jeux depuis RAWG
 async function getGames() {
-  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
   try {
-    const data = await fetchAPI(url);
-
+    const data = await fetchAPI(rawgUrl);
+    rawgUrl = data.next;
     displayGames(data.results);
   } catch (error) {
     console.error(error.message);
@@ -15,10 +14,14 @@ async function getGames() {
 
 function displayGames(games) {
   const gamesContainer = document.getElementById("games-container");
+  gamesContainer.innerHTML = "";
   games.forEach((game) => {
     const card = document.createElement("div");
     card.classList.add("game-card");
     card.addEventListener("click", () => openModal(game.slug)); // on envoie le slug, requête avec le slug dans shark, ensuite on récupère le game ID et on refait une recherche avec le game ID cette fois-ci, on récupère le prix le moins cher ET récupérer le TOUT PREMIER deal
+
+    const cardContent = document.createElement("div");
+    cardContent.classList.add("card-content");
 
     const gameImage = document.createElement("img");
     gameImage.src = game.background_image;
@@ -33,7 +36,8 @@ function displayGames(games) {
     const gameRating = document.createElement("p");
     gameRating.innerText = `${game.rating}/5`;
 
-    card.append(gameImage, gameTitle, gameGenre, gameRating);
+    cardContent.append(gameTitle, gameGenre, gameRating);
+    card.append(gameImage, cardContent);
     gamesContainer.appendChild(card);
   });
 }
@@ -56,7 +60,21 @@ async function openModal(gameName) {
     const rawgData = await fetchRawgData(gameName);
     const cheapSharkData = await fetchCheapSharkData(gameName);
 
-    // Crée le contenu de la modale
+    // const modalHeader = document.createElement("div");
+    // modalHeader.classList.add("modal-header");
+
+    // const gameTitle = document.createElement("h2");
+    // gameTitle.innerText = rawgData.name;
+
+    // const closeButton = document.createElement("span");
+    // closeButton.innerText = "X";
+    // closeButton.addEventListener("click", closeModal);
+
+    // modalHeader.append(gameTitle, closeButton);
+
+    // const modalContent = document.createElement("div");
+    // modalContent.classList.add("modal-content");
+
     const modalContent = `
       <div class="modal-header">
         <h2>${rawgData.name}</h2>
@@ -69,19 +87,16 @@ async function openModal(gameName) {
         <p><strong>Prix le moins cher :</strong> ${
           cheapSharkData.cheapestPrice || "Non disponible"
         }</p>
-        <p><strong>Plateforme :</strong> ${
-          cheapSharkData.platform || "Non disponible"
-        }</p>
         <div class="carousel">
           ${rawgData.screenshots
             .map((screenshot) => `<img src="${screenshot}" alt="Screenshot">`)
             .join("")}
         </div>
         <div class="reviews">
-          <div><span>😍</span> ${rawgData.ratings.love} avis</div>
-          <div><span>🙂</span> ${rawgData.ratings.good} avis</div>
-          <div><span>😐</span> ${rawgData.ratings.meh} avis</div>
-          <div><span>😡</span> ${rawgData.ratings.bad} avis</div>
+          <div><span>😍</span>${rawgData.ratings.love}</div>
+          <div><span>🙂</span>${rawgData.ratings.good}</div>
+          <div><span>😐</span>${rawgData.ratings.meh}</div>
+          <div><span>😡</span>${rawgData.ratings.bad}</div>
         </div>
       </div>
     `;
@@ -126,7 +141,7 @@ async function fetchCheapSharkData(gameName) {
   const searchResponse = await fetch(searchUrl);
   const searchResults = await searchResponse.json();
 
-  const game = searchResults[0]; // Premier jeu trouvé
+  const game = searchResults[0];
   if (!game) return {};
 
   const detailsUrl = `https://www.cheapshark.com/api/1.0/games?id=${game.gameID}`;
@@ -134,9 +149,10 @@ async function fetchCheapSharkData(gameName) {
   const details = await detailsResponse.json();
 
   return {
-    normalPrice: details.info.retailPrice || "Non disponible",
-    cheapestPrice: details.cheapestPriceEver?.price || "Non disponible",
+    normalPrice: details.deals[0].price || "Non disponible",
+    cheapestPrice: details.deals[0].retailPrice || "Non disponible",
     platform: details.deals[0]?.storeID || "Non disponible",
+    savings: details.deals[0].savings,
   };
 }
 
@@ -215,7 +231,6 @@ async function displayStore(name, parent) {
  * @returns {Promise<Object>} - Données de l'API
  * @throws {Error} Si la requête se passe mal
  */
-
 async function fetchAPI(url, headers = {}) {
   try {
     const response = await fetch(url, { headers });

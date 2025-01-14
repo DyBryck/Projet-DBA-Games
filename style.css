@@ -5,8 +5,10 @@
 
 * {
   font-family: Montserrat;
-  letter-spacing: 1px;
   color: var(--text-color);
+  letter-spacing: 1px;
+  margin: 0;
+  padding: 0;
 }
 
 input {
@@ -16,36 +18,40 @@ body {
   background-color: var(--background-primary);
 }
 
+button {
+  cursor: pointer;
+}
+
 header {
   display: flex;
   align-items: center;
-  height: 100px;
   width: 100%;
+  height: 100px;
 }
 
 .imageLogoDBA {
-  height: 75px;
   width: 130px;
+  height: 75px;
 }
 
 .recherche {
   display: flex;
   align-items: center;
-  margin-left: 50px;
-  margin-top: 20px;
-  height: 40px;
   width: 70%;
+  height: 40px;
+  margin-top: 20px;
+  margin-left: 50px;
   background-color: #413e3e;
   border-radius: 30px;
 }
 input {
-  color: var(--text-color);
-  background-color: #413e3e;
-  height: 25px;
+  outline: none;
   width: 100%;
+  height: 25px;
+  background-color: #413e3e;
   border: 0;
   border-radius: 30px;
-  outline: none;
+  color: var(--text-color);
 }
 
 input::placeholder {
@@ -53,45 +59,45 @@ input::placeholder {
 }
 
 .btnRechercher {
-  margin: 20px;
-  background-image: url("images/SearchImg.svg");
-  background-repeat: no-repeat;
-  background-color: transparent;
-  height: 20px;
   width: 20px;
+  height: 20px;
+  margin: 20px;
+  background-color: transparent;
+  background-image: url("./assets/images/SearchImg.svg");
+  background-repeat: no-repeat;
   border: 0;
 }
 
 main {
   display: flex;
   flex-direction: row;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
 nav {
-  height: 500px;
   width: 15%;
+  height: 500px;
 }
 
 .main-container {
-  margin-top: 50px;
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 85%;
+  height: 100%;
+  margin-top: 50px;
 }
 
 #btnSuivant {
+  width: 100px;
+  height: 50px;
   background-color: transparent;
   border: 0;
-  height: 50px;
-  width: 100px;
 }
 
 #games-container {
-  gap: 45px;
   display: flex;
   flex-wrap: wrap;
+  gap: 45px;
 }
 
 #btn-container {
@@ -101,17 +107,26 @@ nav {
 }
 
 .game-card {
-  background-color: #2f2c2c;
-  border-radius: 30px;
   width: 20%;
   height: 300px;
+  background-color: #2f2c2c;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 10px;
+  height: 50%;
 }
 
 .game-card img {
-  border-top-left-radius: 30px;
-  border-top-right-radius: 30px;
   width: 100%;
   height: 120px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
 }
 
 .game-card p {
@@ -119,19 +134,67 @@ nav {
 }
 
 nav a {
-  text-decoration: none;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  text-decoration: none;
 }
 
 .links-Hot {
-  font-size: 20px;
   margin-top: 30px;
+  font-size: 20px;
 }
 
 .links-Grey {
-  font-size: 15px;
   margin-top: 20px;
+  font-size: 15px;
   color: #aaa8a8;
+}
+
+.modal {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #2f2c2c;
+  border-radius: 8px;
+  color: var(--text-color);
+}
+
+.modal.open {
+  display: block;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-close {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+.carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.carousel img {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 5px;
+}
+
+.reviews {
+  display: flex;
+  justify-content: space-around;
 }
