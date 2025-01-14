@@ -1,4 +1,4 @@
-const apiKeyRAWG = "0e2e4233d5ea4e218b5f6e1ae6acedc3";
+const apiKeyRAWG = "0f551c1455924f2cbb203cd560dafeab";
 let rawgUrl = `https://api.rawg.io/api/games?key=${apiKeyRAWG}&page_size=8`;
 
 async function getGames() {
