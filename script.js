@@ -1,5 +1,5 @@
-const apiKeyRAWG = "0e2e4233d5ea4e218b5f6e1ae6acedc3";
-let rawgUrl = `https://api.rawg.io/api/games?key=${apiKeyRAWG}&page_size=10`;
+const API_KEY_RAWG = "0e2e4233d5ea4e218b5f6e1ae6acedc3";
+let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=10`;
 
 async function getGames() {
   try {
@@ -30,11 +30,11 @@ function displayGames(games) {
 
 getGames();
 
-const cheapSharkUrl = `https://www.cheapshark.com/api/1.0/deals?storeID=1&title=`;
+const CHEAPSHARKURL = `https://www.cheapshark.com/api/1.0/deals?storeID=1&title=`;
 
 async function getGamePrice(gameTitle) {
   try {
-    const response = await fetch(`${cheapSharkUrl}${gameTitle}`);
+    const response = await fetch(`${CHEAPSHARKURL}${gameTitle}`);
     if (!response.ok)
       throw new Error("Erreur lors de la récupération des prix !");
     const data = await response.json();
@@ -66,7 +66,7 @@ function searchGame() {
 }
 
 async function getGamesByTitle(title) {
-  const searchUrl = `https://api.rawg.io/api/games?key=${apiKeyRAWG}&search=${title}`;
+  const searchUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`;
   try {
     const response = await fetch(searchUrl);
     if (!response.ok) throw new Error("Erreur lors de la recherche !");
@@ -76,6 +76,3 @@ async function getGamesByTitle(title) {
     console.error(error.message);
   }
 }
-
-// SALUT CEEST MOi
-console.log('Salut c\'est toi !');	
