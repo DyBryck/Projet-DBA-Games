@@ -100,19 +100,21 @@ nav {
   width: 90%;
 }
 
-.div-game {
+.game-card {
   background-color: #2f2c2c;
   border-radius: 30px;
   width: 220px;
   height: 300px;
 }
 
-.div-game img {
+.game-card img {
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
+  width: 220px;
+  height: 120px;
 }
 
-.div-game p {
+.game-card p {
   font-size: 13px;
 }
 
