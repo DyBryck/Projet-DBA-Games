@@ -78,3 +78,4 @@ async function getGamesByTitle(title) {
 }
 
 // SALUT CEEST MOi
+console.log('Salut c\'est toi !');	
