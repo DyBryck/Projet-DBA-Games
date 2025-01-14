@@ -1,5 +1,5 @@
-const API_KEY_RAWG = "0e2e4233d5ea4e218b5f6e1ae6acedc3";
-let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=10`;
+const API_KEY_RAWG = "0f551c1455924f2cbb203cd560dafeab";
+let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
 
 async function getGames() {
   try {
@@ -20,10 +20,12 @@ function displayGames(games) {
   games.forEach((game) => {
     const gameElement = document.createElement("div");
     gameElement.innerHTML = `
+      <img src="${game.background_image}" alt="${game.name}" width="220px"
+      height="120" >
       <h3>${game.name}</h3>
       <p>Date de sortie : ${game.released}</p>
-      <img src="${game.background_image}" alt="${game.name}" width="200">
     `;
+    gameElement.classList.add("div-game");
     gamesContainer.appendChild(gameElement);
   });
 }

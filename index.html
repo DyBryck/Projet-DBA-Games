@@ -1,17 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>RAWG x CheapShark</title>
   </head>
   <body>
-    <input type="text" id="search-input" placeholder="Rechercher un jeu..." />
-    <button onclick="searchGame()">Rechercher</button>
-    <div id="games-container"></div>
-    <div id="prices-container"></div>
-    <button onclick="getGames()">Suivant</button>
+    <header>
+      <img src="images/DBAGamesLogo.jpeg" alt="" class="imageLogoDBA" />
+      <div class="recherche">
+        <button class="btnRechercher" onclick="searchGame()"></button>
+
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Rechercher parmis 879,718 games"
+        />
+      </div>
+    </header>
+    <main>
+      <nav>
+        <a class="links-Hot" href="Home">Home</a>
+        <a class="links-Hot" href="Tendances">Tendances</a>
+        <p class="links-Hot">Plateformes</p>
+        <a class="links-Grey" href="PC">PC</a>
+        <a class="links-Grey" href="Playstation">Playstation</a>
+        <a class="links-Grey" href="XboxOne">Xbox One</a>
+        <a class="links-Grey" href="iOS">iOS</a>
+        <a class="links-Grey" href="Android">Android</a>
+        <p class="links-Hot">Genres</p>
+        <a class="links-Grey" href="Action">Action</a>
+        <a class="links-Grey" href="Aventure">Aventure</a>
+        <a class="links-Grey" href="RPG">RPG</a>
+        <a class="links-Grey" href="Puzzle">Puzzle</a>
+        <a class="links-Grey" href="Horreur">Horreur</a>
+        <a class="links-Grey" href="Shooter">Shooter</a>
+      </nav>
+      <div class="main-container">
+        <div id="games-container"></div>
+        <div id="btn-container">
+          <button id="btnSuivant" onclick="getGames()">Suivant</button>
+        </div>
+      </div>
+    </main>
+
     <script src="script.js"></script>
   </body>
 </html>
