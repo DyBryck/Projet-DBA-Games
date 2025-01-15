@@ -75,6 +75,7 @@ async function openModal(gameName) {
     gameTitle.innerText = rawgData.name;
 
     const closeButton = document.createElement("span");
+    closeButton.style.cursor = "pointer";
     closeButton.innerText = "X";
     closeButton.addEventListener("click", closeModal);
 
