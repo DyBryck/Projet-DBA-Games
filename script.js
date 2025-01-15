@@ -55,6 +55,7 @@ async function getGamesByTitle(title) {
 
 // Ouvre une modale avec les infos du jeu
 async function openModal(gameName) {
+  let loading = true;
   try {
     // Récupère les infos de RAWG et CheapShark
     const rawgData = await fetchRawgData(gameName);
@@ -74,8 +75,6 @@ async function openModal(gameName) {
 
     const modalContent = document.createElement("div");
     modalContent.classList.add("modal-content");
-
-    console.log(cheapSharkData);
 
     if (cheapSharkData) {
       const normalPrice = document.createElement("p");
@@ -124,6 +123,7 @@ async function openModal(gameName) {
     modalContent.append(carousel, reviews);
 
     //  Affiche la modale
+    loading = false;
     const modal = document.querySelector(".modal");
     modal.append(modalHeader, modalContent);
     modal.classList.add("open");
