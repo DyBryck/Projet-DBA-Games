@@ -80,41 +80,37 @@ async function openModal(gameName) {
     const rawgData = await fetchRawgData(gameName);
     const cheapSharkData = await fetchCheapSharkData(gameName);
 
-//     // const modalHeader = document.createElement("div");
-//     // modalHeader.classList.add("modal-header");
+    const modalHeader = document.createElement("div");
+    modalHeader.classList.add("modal-header");
 
-//     // const gameTitle = document.createElement("h2");
-//     // gameTitle.innerText = rawgData.name;
+    const gameTitle = document.createElement("h2");
+    gameTitle.innerText = rawgData.name;
 
     const closeButton = document.createElement("span");
     closeButton.style.cursor = "pointer";
     closeButton.innerText = "X";
     closeButton.addEventListener("click", closeModal);
 
-//     // modalHeader.append(gameTitle, closeButton);
+    modalHeader.append(gameTitle, closeButton);
 
-//     // const modalContent = document.createElement("div");
-//     // modalContent.classList.add("modal-content");
+    const modalContent = document.createElement("div");
+    modalContent.classList.add("modal-content");
 
-//     const modalHeader = document.createElement("div");
-//     modalHeader.classList.add("modal-header");
+    if (cheapSharkData) {
+      const normalPrice = document.createElement("p");
+      normalPrice.innerText = cheapSharkData
+        ? `Prix normal: ${cheapSharkData.normalPrice}€`
+        : "Prix indisponible";
 
-//     const gameTitle = document.createElement("h2");
-//     gameTitle.innerText = rawgData.name;
+      const cheapestPrice = document.createElement("p");
+      cheapestPrice.innerText = cheapSharkData
+        ? `Prix le moins cher: ${cheapSharkData.cheapestPrice}€`
+        : "Prix indisponible";
 
-//     const closeButton = document.createElement("span");
-//     closeButton.innerText = "X";
-//     closeButton.addEventListener("click", closeModal);
-
-//     const modalContent = document.createElement("div");
-//     modalContent.classList.add("modal-content");
-
-//     const prixNormal = document.createElement("p");
-//     prixNormal.innerHTML =
-//       "Prix normal " + cheapSharkData.normalPrice || "Non disponible";
-//     const prixMoins = document.createElement("p");
-//     prixMoins.innerHTML =
-//       "Prix le moins cher :" + cheapSharkData.cheapestPrice || "Non disponible";
+      modalContent.append(normalPrice, cheapestPrice);
+    } else {
+      const noPromo = document.createElement("p");
+      noPromo.innerText = "Pas de promotion trouvée";
 
       modalContent.appendChild(noPromo);
     }
@@ -189,7 +185,7 @@ async function fetchCheapSharkData(gameName) {
   const searchResults = await searchResponse.json();
 
   const game = searchResults[0];
-  if (!game) return {};
+  if (!game) return false;
 
   const detailsUrl = `https://www.cheapshark.com/api/1.0/games?id=${game.gameID}`;
   const detailsResponse = await fetch(detailsUrl);
@@ -301,12 +297,12 @@ const fetchGenres = async () => {
   const response = await fetch(url);
   const data = await response.json();
   genres = data.results;
-  displayGenre();
+  displayGenres();
 };
 
 fetchGenres();
 
-const displayGenre = () => {
+const displayGenres = () => {
   const genresContainer = document.querySelector(".genres-container");
   genres.forEach((genre) => {
     const genreJeu = document.createElement("a");
@@ -316,6 +312,7 @@ const displayGenre = () => {
     genreJeu.addEventListener("click", () => fetchGamesFromGenre(genre.id));
   });
 };
+
 const fetchGamesFromGenre = async (id) => {
   setLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&genres=${id}&page_size=8`;
