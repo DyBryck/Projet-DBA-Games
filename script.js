@@ -3,14 +3,25 @@ let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
 
 // Affiche la liste des jeux depuis RAWG
 async function getGames() {
+  setLoader(true);
   try {
     const data = await fetchAPI(rawgUrl);
     rawgUrl = data.next;
+    setLoader(false);
     displayGames(data.results);
   } catch (error) {
     console.error(error.message);
   }
 }
+
+/**
+ * @summary Affiche ou masque le loader
+ * @param {boolean} displayOrNo Vrai = affiche le loader, faux = masque le loader
+ */
+const setLoader = (displayOrNo) => {
+  const loader = document.querySelector(".loader-container");
+  loader.style.display = displayOrNo ? "flex" : "none";
+};
 
 function displayGames(games) {
   const gamesContainer = document.getElementById("games-container");
@@ -42,23 +53,32 @@ function displayGames(games) {
   });
 }
 
+function searchGame() {
+  const gameTitle = document.getElementById("search-input").value;
+  if (!gameTitle) return alert("Veuillez entrer un titre !");
+  getGamesByTitle(gameTitle);
+}
+
 async function getGamesByTitle(title) {
+  setLoader(true);
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`;
   try {
-    const data = await fetchAPI(
-      `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`,
-    );
-    displayGames(data);
+    const response = await fetch(url);
+    const data = await response.json();
+    setLoader(false);
+    displayGames(data.results);
   } catch (error) {
     console.error(error.message);
   }
 }
 
 // Ouvre une modale avec les infos du jeu
-// async function openModal(gameName) {
-//   try {
-//     // Récupère les infos de RAWG et CheapShark
-//     const rawgData = await fetchRawgData(gameName);
-//     const cheapSharkData = await fetchCheapSharkData(gameName);
+async function openModal(gameName) {
+  setLoader(true);
+  try {
+    // Récupère les infos de RAWG et CheapShark
+    const rawgData = await fetchRawgData(gameName);
+    const cheapSharkData = await fetchCheapSharkData(gameName);
 
 //     // const modalHeader = document.createElement("div");
 //     // modalHeader.classList.add("modal-header");
@@ -66,9 +86,10 @@ async function getGamesByTitle(title) {
 //     // const gameTitle = document.createElement("h2");
 //     // gameTitle.innerText = rawgData.name;
 
-//     // const closeButton = document.createElement("span");
-//     // closeButton.innerText = "X";
-//     // closeButton.addEventListener("click", closeModal);
+    const closeButton = document.createElement("span");
+    closeButton.style.cursor = "pointer";
+    closeButton.innerText = "X";
+    closeButton.addEventListener("click", closeModal);
 
 //     // modalHeader.append(gameTitle, closeButton);
 
@@ -95,35 +116,46 @@ async function getGamesByTitle(title) {
 //     prixMoins.innerHTML =
 //       "Prix le moins cher :" + cheapSharkData.cheapestPrice || "Non disponible";
 
-//     modalHeader.append(gameTitle, closeButton, prixNormal, prixMoins);
+      modalContent.appendChild(noPromo);
+    }
 
-//     const carousel = document.createElement("div");
-//     carousel.classList.add("carousel");
-//     carousel.innerHTML =
-//       rawgData.screenshots + map((screenshot = img.src = screenshot));
-//     join("");
-//     const reviews = document.createElement("div");
-//     reviews.classList.add("reviews");
-//     const ratingG = document.createElement("div");
-//     ratingG.innerHTML`
-//         </div>
-//         <div class="reviews">
-//           <div><span>😍</span>${rawgData.ratings.love}</div>
-//           <div><span>🙂</span>${rawgData.ratings.good}</div>
-//           <div><span>😐</span>${rawgData.ratings.meh}</div>
-//           <div><span>😡</span>${rawgData.ratings.bad}</div>
-//         </div>
-//       </div>
-//     `;
+    const carousel = document.createElement("div");
+    carousel.classList.add("carousel");
+    rawgData.screenshots.map((screenshot) => {
+      const img = document.createElement("img");
+      img.src = screenshot;
+      carousel.appendChild(img);
+    });
 
-//     // Affiche la modale
-//     const modal = document.querySelector(".modal");
-//     modal.innerHTML = modalContent;
-//     modal.classList.add("open");
-//   } catch (error) {
-//     console.error(error.message);
-//   }
-// }
+    const reviews = document.createElement("div");
+    reviews.classList.add("reviews");
+
+    const love = document.createElement("p");
+    love.innerText = `😍 ${rawgData.ratings.love}`;
+
+    const good = document.createElement("p");
+    good.innerText = `🙂 ${rawgData.ratings.good}`;
+
+    const meh = document.createElement("p");
+    meh.innerText = `😐 ${rawgData.ratings.meh}`;
+
+    const bad = document.createElement("p");
+    bad.innerText = `😡 ${rawgData.ratings.bad}`;
+
+    reviews.append(love, good, meh, bad);
+
+    modalContent.append(carousel, reviews);
+
+    //  Affiche la modale
+    setLoader(false);
+    const modal = document.querySelector(".modal");
+    modal.innerHTML = "";
+    modal.append(modalHeader, modalContent);
+    modal.classList.add("open");
+  } catch (error) {
+    console.error(error.message);
+  }
+}
 
 // Récupère les données d'un jeu sur RAWG
 async function fetchRawgData(gameName) {
@@ -262,6 +294,7 @@ async function fetchAPI(url, headers = {}) {
 }
 
 let genres = [];
+let platforms = [];
 
 const fetchGenres = async () => {
   const url = `https://api.rawg.io/api/genres?key=${API_KEY_RAWG}`;
@@ -284,6 +317,41 @@ const displayGenre = () => {
   });
 };
 const fetchGamesFromGenre = async (id) => {
-  console.log(id);
-  const url = `https://api.rawg.io/api/genres/${id}`;
+  setLoader(true);
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&genres=${id}&page_size=8`;
+  const data = await fetchAPI(url);
+  setLoader(false);
+  displayGames(data.results);
 };
+
+const fetchPlatforms = async () => {
+  const url = `https://api.rawg.io/api/platforms?key=${API_KEY_RAWG}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  platforms = data.results;
+  displayPlatforms();
+};
+
+const displayPlatforms = () => {
+  const platformsContainer = document.querySelector(".platforms-container");
+  platforms.forEach((platform) => {
+    const platformShow = document.createElement("a");
+    platformShow.classList.add("links-Grey");
+    platformShow.innerText = platform.name;
+    platformsContainer.appendChild(platformShow);
+    platformShow.addEventListener(
+      "click",
+      async () => await fetchGamesFromPlatform(platform.id),
+    );
+  });
+};
+
+const fetchGamesFromPlatform = async (id) => {
+  setLoader(true);
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&platforms=${id}&page_size=8`;
+  const data = await fetchAPI(url);
+  setLoader(false);
+  displayGames(data.results);
+};
+
+fetchPlatforms();
