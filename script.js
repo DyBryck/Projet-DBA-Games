@@ -3,18 +3,22 @@ let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
 
 // Affiche la liste des jeux depuis RAWG
 async function getGames() {
-  showLoader(true);
+  setLoader(true);
   try {
     const data = await fetchAPI(rawgUrl);
     rawgUrl = data.next;
-    showLoader(false);
+    setLoader(false);
     displayGames(data.results);
   } catch (error) {
     console.error(error.message);
   }
 }
 
-const showLoader = (displayOrNo) => {
+/**
+ * @summary Affiche ou masque le loader
+ * @param {boolean} displayOrNo Vrai = affiche le loader, faux = masque le loader
+ */
+const setLoader = (displayOrNo) => {
   const loader = document.querySelector(".loader-container");
   loader.style.display = displayOrNo ? "flex" : "none";
 };
@@ -56,12 +60,12 @@ function searchGame() {
 }
 
 async function getGamesByTitle(title) {
-  showLoader(true);
+  setLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`;
   try {
     const response = await fetch(url);
     const data = await response.json();
-    showLoader(false);
+    setLoader(false);
     displayGames(data.results);
   } catch (error) {
     console.error(error.message);
@@ -70,7 +74,7 @@ async function getGamesByTitle(title) {
 
 // Ouvre une modale avec les infos du jeu
 async function openModal(gameName) {
-  showLoader(true);
+  setLoader(true);
   try {
     // Récupère les infos de RAWG et CheapShark
     const rawgData = await fetchRawgData(gameName);
@@ -139,7 +143,7 @@ async function openModal(gameName) {
     modalContent.append(carousel, reviews);
 
     //  Affiche la modale
-    showLoader(false);
+    setLoader(false);
     const modal = document.querySelector(".modal");
     modal.innerHTML = "";
     modal.append(modalHeader, modalContent);
@@ -310,10 +314,10 @@ const displayGenres = () => {
 };
 
 const fetchGamesFromGenre = async (id) => {
-  showLoader(true);
+  setLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&genres=${id}&page_size=8`;
   const data = await fetchAPI(url);
-  showLoader(false);
+  setLoader(false);
   displayGames(data.results);
 };
 
@@ -340,10 +344,10 @@ const displayPlatforms = () => {
 };
 
 const fetchGamesFromPlatform = async (id) => {
-  showLoader(true);
+  setLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&platforms=${id}&page_size=8`;
   const data = await fetchAPI(url);
-  showLoader(false);
+  setLoader(false);
   displayGames(data.results);
 };
 
