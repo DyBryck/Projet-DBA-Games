@@ -12,6 +12,11 @@ async function getGames() {
   }
 }
 
+const showLoader = (displayOrNo) => {
+  const loader = document.querySelector(".loader-container");
+  loader.style.display = displayOrNo ? "flex" : "none";
+};
+
 function displayGames(games) {
   const gamesContainer = document.getElementById("games-container");
   gamesContainer.innerHTML = "";
@@ -55,7 +60,7 @@ async function getGamesByTitle(title) {
 
 // Ouvre une modale avec les infos du jeu
 async function openModal(gameName) {
-  let loading = true;
+  showLoader(true);
   try {
     // Récupère les infos de RAWG et CheapShark
     const rawgData = await fetchRawgData(gameName);
@@ -123,7 +128,7 @@ async function openModal(gameName) {
     modalContent.append(carousel, reviews);
 
     //  Affiche la modale
-    loading = false;
+    showLoader(false);
     const modal = document.querySelector(".modal");
     modal.append(modalHeader, modalContent);
     modal.classList.add("open");
@@ -292,7 +297,9 @@ const displayGenres = () => {
 };
 
 const fetchGamesFromGenre = async (id) => {
+  showLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&genres=${id}&page_size=8`;
   const data = await fetchAPI(url);
+  showLoader(false);
   displayGames(data.results);
 };
