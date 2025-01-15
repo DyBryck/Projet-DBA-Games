@@ -49,12 +49,20 @@ function displayGames(games) {
   });
 }
 
+function searchGame() {
+  const gameTitle = document.getElementById("search-input").value;
+  if (!gameTitle) return alert("Veuillez entrer un titre !");
+  getGamesByTitle(gameTitle);
+}
+
 async function getGamesByTitle(title) {
+  showLoader(true);
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`;
   try {
-    const data = await fetchAPI(
-      `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`,
-    );
-    displayGames(data);
+    const response = await fetch(url);
+    const data = await response.json();
+    showLoader(false);
+    displayGames(data.results);
   } catch (error) {
     console.error(error.message);
   }
