@@ -60,20 +60,53 @@ async function openModal(gameName) {
     const rawgData = await fetchRawgData(gameName);
     const cheapSharkData = await fetchCheapSharkData(gameName);
 
-    // const modalHeader = document.createElement("div");
-    // modalHeader.classList.add("modal-header");
+    const modalHeader = document.createElement("div");
+    modalHeader.classList.add("modal-header");
 
-    // const gameTitle = document.createElement("h2");
-    // gameTitle.innerText = rawgData.name;
+    const gameTitle = document.createElement("h2");
+    gameTitle.innerText = rawgData.name;
 
-    // const closeButton = document.createElement("span");
-    // closeButton.innerText = "X";
-    // closeButton.addEventListener("click", closeModal);
+    const closeButton = document.createElement("span");
+    closeButton.innerText = "X";
+    closeButton.addEventListener("click", closeModal);
 
-    // modalHeader.append(gameTitle, closeButton);
+    modalHeader.append(gameTitle, closeButton);
+
+    if (cheapSharkData) {
+      const normalPrice = document.createElement("p");
+      normalPrice.innerText = `Prix normal: ${cheapSharkData.normalPrice}`;
+
+      const cheapestPrice = document.createElement("p");
+      cheapestPrice.innerText = `Prix le moins cher: ${cheapSharkData.cheapestPrice}`;
+    }
 
     // const modalContent = document.createElement("div");
     // modalContent.classList.add("modal-content");
+
+    const carousel = document.createElement("div");
+    carousel.classList.add("carousel");
+    rawgData.screenshots.map((screenshot) => {
+      const img = document.createElement("img");
+      img.src = screenshot;
+      carousel.appendChild(img);
+    });
+
+    const reviews = document.createElement("div");
+    reviews.classList.add("reviews");
+
+    const love = document.createElement("p");
+    love.innerText = `😍 ${rawgData.ratings.love}`;
+
+    const good = document.createElement("p");
+    good.innerText = `🙂 ${rawgData.ratings.good}`;
+
+    const meh = document.createElement("p");
+    meh.innerText = `😐 ${rawgData.ratings.meh}`;
+
+    const bad = document.createElement("p");
+    bad.innerText = `😡 ${rawgData.ratings.bad}`;
+
+    reviews.append(love, good, meh, bad);
 
     const modalContent = cheapSharkData
       ? `
@@ -272,16 +305,19 @@ const fetchGenres = async () => {
   const response = await fetch(url);
   const data = await response.json();
   genres = data.results;
-  console.log(genres);
 };
 
 fetchGenres();
 
-const displayGenre = () => {
-  const genresContainer = document.querySelector(".genres-container");
-  genres.forEach((genre) => console.log(genre));
-};
+// const displayGenres = () => {
+//   const genresContainer = document.querySelector(".genres-container");
+//   genres.forEach((genre) => console.log(genre));
+//   const link = document.createElement("a");
+//   a.innert
+// };
 
 const fetchGamesFromGenre = async (id) => {
-  const url = `https://api.rawg.io/api/genres/${id}`;
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&genres=${id}&page_size=8`;
+  const data = await fetchAPI(url);
+  displayGames(data.results);
 };
