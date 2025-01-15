@@ -18,7 +18,7 @@ function displayGames(games) {
   games.forEach((game) => {
     const card = document.createElement("div");
     card.classList.add("game-card");
-    card.addEventListener("click", () => openModal(game.slug)); // on envoie le slug, requête avec le slug dans shark, ensuite on récupère le game ID et on refait une recherche avec le game ID cette fois-ci, on récupère le prix le moins cher ET récupérer le TOUT PREMIER deal
+    card.addEventListener("click", () => openModal(game.name)); // on envoie le name, requête avec le name dans shark, ensuite on récupère le game ID et on refait une recherche avec le game ID cette fois-ci, on récupère le prix le moins cher ET récupérer le TOUT PREMIER deal
 
     const cardContent = document.createElement("div");
     cardContent.classList.add("card-content");
@@ -148,12 +148,16 @@ async function fetchCheapSharkData(gameName) {
   const detailsResponse = await fetch(detailsUrl);
   const details = await detailsResponse.json();
 
-  return {
-    normalPrice: details.deals[0].price || "Non disponible",
-    cheapestPrice: details.deals[0].retailPrice || "Non disponible",
-    platform: details.deals[0]?.storeID || "Non disponible",
-    savings: details.deals[0].savings,
-  };
+  if (parseInt(details.deals[0].savings)) {
+    return;
+  } else {
+    return {
+      normalPrice: details.deals[0].retailPrice || "Non disponible",
+      cheapestPrice: details.deals[0].price || "Non disponible",
+      platform: details.deals[0]?.storeID || "Non disponible",
+      savings: details.deals[0].savings,
+    };
+  }
 }
 
 // Ferme la modale
