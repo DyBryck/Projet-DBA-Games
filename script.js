@@ -306,7 +306,6 @@ const fetchGamesFromGenre = async (id) => {
   displayGames(data.results);
 };
 
-
 const fetchPlatforms = async () => {
   const url = `https://api.rawg.io/api/platforms?key=${API_KEY_RAWG}`;
   const response = await fetch(url);
@@ -322,13 +321,18 @@ const displayPlatforms = () => {
     platformShow.classList.add("links-Grey");
     platformShow.innerText = platform.name;
     platformsContainer.appendChild(platformShow);
-    platformShow.addEventListener("click", () => fetchGamesFromPlatform(platform.id));
+    platformShow.addEventListener(
+      "click",
+      async () => await fetchGamesFromPlatform(platform.id),
+    );
   });
 };
 
 const fetchGamesFromPlatform = async (id) => {
+  showLoader(true);
   const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&platforms=${id}&page_size=8`;
   const data = await fetchAPI(url);
+  showLoader(false);
   displayGames(data.results);
 };
 
