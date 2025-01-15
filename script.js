@@ -3,9 +3,11 @@ let rawgUrl = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&page_size=8`;
 
 // Affiche la liste des jeux depuis RAWG
 async function getGames() {
+  showLoader(true);
   try {
     const data = await fetchAPI(rawgUrl);
     rawgUrl = data.next;
+    showLoader(false);
     displayGames(data.results);
   } catch (error) {
     console.error(error.message);
