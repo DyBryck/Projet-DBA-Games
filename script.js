@@ -45,7 +45,7 @@ function displayGames(games) {
 async function getGamesByTitle(title) {
   try {
     const data = await fetchAPI(
-      `https://api.rawg.io/api/games?key=${apiKeyRAWG}&search=${title}`,
+      `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&search=${title}`,
     );
     displayGames(data);
   } catch (error) {
@@ -163,8 +163,8 @@ async function fetchCheapSharkData(gameName) {
   const detailsResponse = await fetch(detailsUrl);
   const details = await detailsResponse.json();
 
-  if (parseInt(details.deals[0].savings)) {
-    return;
+  if (parseInt(details.deals[0].savings) === 0) {
+    return false;
   } else {
     return {
       normalPrice: details.deals[0].retailPrice || "Non disponible",
@@ -185,63 +185,63 @@ function closeModal() {
 // Charge les jeux dès le chargement de la page
 getGames();
 
-/**
- * @summary Récupère la liste des stores de CheapShark
- * @returns {Promise<Object[]>} - Tableau d'objets représentant les stores
- * @throws {Error} Si la requête se passe mal
- */
-async function getStores() {
-  try {
-    const data = await fetchAPI("https://www.cheapshark.com/api/1.0/stores");
-    return data;
-  } catch (error) {
-    console.error(error.message);
-  }
-}
+// /**
+//  * @summary Récupère la liste des stores de CheapShark
+//  * @returns {Promise<Object[]>} - Tableau d'objets représentant les stores
+//  * @throws {Error} Si la requête se passe mal
+//  */
+// async function getStores() {
+//   try {
+//     const data = await fetchAPI("https://www.cheapshark.com/api/1.0/stores");
+//     return data;
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// }
 
-/**
- * @summary Cherche un store en fonction de son nom
- * @param {string} name - Nom du store
- * @returns {Promise<Object>} - Le store correspondant
- */
-async function searchStore(name) {
-  const stores = await getStores();
-  return stores.find(
-    (store) => store.storeName === name.charAt(0).toUpperCase() + name.slice(1),
-  );
-}
+// /**
+//  * @summary Cherche un store en fonction de son nom
+//  * @param {string} name - Nom du store
+//  * @returns {Promise<Object>} - Le store correspondant
+//  */
+// async function searchStore(name) {
+//   const stores = await getStores();
+//   return stores.find(
+//     (store) => store.storeName === name.charAt(0).toUpperCase() + name.slice(1),
+//   );
+// }
 
-/**
- * @summary Cherche un store en fonction de son storeID
- * @param {string} id - ID du store
- * @returns {Promise<Object>} - Le store correspondant
- */
-async function searchStoreByID(id) {
-  const stores = await getStores();
-  return stores.find((store) => store.storeID === `${id}`);
-}
+// /**
+//  * @summary Cherche un store en fonction de son storeID
+//  * @param {string} id - ID du store
+//  * @returns {Promise<Object>} - Le store correspondant
+//  */
+// async function searchStoreByID(id) {
+//   const stores = await getStores();
+//   return stores.find((store) => store.storeID === `${id}`);
+// }
 
-/**
- * @summary Affiche le logo et le nom d'un store
- * @param {HTMLElement} parent - Élément parent qui contiendra la balise <div> créée
- */
-async function displayStore(name, parent) {
-  const store = await searchStore(name);
-  if (!store) return console.error("Store non trouvé !");
+// /**
+//  * @summary Affiche le logo et le nom d'un store
+//  * @param {HTMLElement} parent - Élément parent qui contiendra la balise <div> créée
+//  */
+// async function displayStore(name, parent) {
+//   const store = await searchStore(name);
+//   if (!store) return console.error("Store non trouvé !");
 
-  const div = document.createElement("div");
-  div.classList.add("store");
+//   const div = document.createElement("div");
+//   div.classList.add("store");
 
-  const img = document.createElement("img");
-  img.src = `https://www.cheapshark.com/${store.images.logo}`;
+//   const img = document.createElement("img");
+//   img.src = `https://www.cheapshark.com/${store.images.logo}`;
 
-  const h2 = document.createElement("h2");
-  h2.textContent = store.storeName;
+//   const h2 = document.createElement("h2");
+//   h2.textContent = store.storeName;
 
-  div.append(h2, img);
-  parent.appendChild(div);
-  console.log(store);
-}
+//   div.append(h2, img);
+//   parent.appendChild(div);
+//   console.log(store);
+// }
 
 /**
  * @summary Requête une API
@@ -261,8 +261,29 @@ async function fetchAPI(url, headers = {}) {
   }
 }
 
-const nav = document.querySelector("nav");
+let genres = [];
 
-function addGenres() {}
+const fetchGenres = async () => {
+  const url = `https://api.rawg.io/api/genres?key=${API_KEY_RAWG}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  genres = data.results;
+  displayGenre();
+};
 
-console.log(nav);
+fetchGenres();
+
+const displayGenre = () => {
+  const genresContainer = document.querySelector(".genres-container");
+  genres.forEach((genre) => {
+    const genreJeu = document.createElement("a");
+    genreJeu.classList.add("links-Grey");
+    genreJeu.innerText = genre.name;
+    genresContainer.appendChild(genreJeu);
+    genreJeu.addEventListener("click", () => fetchGamesFromGenre(genre.id));
+  });
+};
+const fetchGamesFromGenre = async (id) => {
+  console.log(id);
+  const url = `https://api.rawg.io/api/genres/${id}`;
+};
