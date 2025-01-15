@@ -54,11 +54,11 @@ async function getGamesByTitle(title) {
 }
 
 // Ouvre une modale avec les infos du jeu
-async function openModal(gameName) {
-  try {
-    // Récupère les infos de RAWG et CheapShark
-    const rawgData = await fetchRawgData(gameName);
-    const cheapSharkData = await fetchCheapSharkData(gameName);
+// async function openModal(gameName) {
+//   try {
+//     // Récupère les infos de RAWG et CheapShark
+//     const rawgData = await fetchRawgData(gameName);
+//     const cheapSharkData = await fetchCheapSharkData(gameName);
 
     const modalHeader = document.createElement("div");
     modalHeader.classList.add("modal-header");
@@ -108,59 +108,55 @@ async function openModal(gameName) {
 
     reviews.append(love, good, meh, bad);
 
-    const modalContent = cheapSharkData
-      ? `
-      <div class="modal-header">
-        <h2>${rawgData.name}</h2>
-        <span class="modal-close" onclick="closeModal()">×</span>
-      </div>
-      <div class="modal-content">
-        <p><strong>Prix normal :</strong> ${
-          cheapSharkData.normalPrice || "Non disponible"
-        }</p>
-        <p><strong>Prix le moins cher :</strong> ${
-          cheapSharkData.cheapestPrice || "Non disponible"
-        }</p>
-        <div class="carousel">
-          ${rawgData.screenshots
-            .map((screenshot) => `<img src="${screenshot}" alt="Screenshot">`)
-            .join("")}
-        </div>
-        <div class="reviews">
-          <div><span>😍</span>${rawgData.ratings.love}</div>
-          <div><span>🙂</span>${rawgData.ratings.good}</div>
-          <div><span>😐</span>${rawgData.ratings.meh}</div>
-          <div><span>😡</span>${rawgData.ratings.bad}</div>
-        </div>
-      </div>
-    `
-      : `<div class="modal-header">
-        <h2>${rawgData.name}</h2>
-        <span class="modal-close" onclick="closeModal()">×</span>
-      </div>
-      <div class="modal-content">
-        <p><strong>Pas de promotion!</strong>
-        <div class="carousel">
-          ${rawgData.screenshots
-            .map((screenshot) => `<img src="${screenshot}" alt="Screenshot">`)
-            .join("")}
-        </div>
-        <div class="reviews">
-          <div><span>😍</span>${rawgData.ratings.love}</div>
-          <div><span>🙂</span>${rawgData.ratings.good}</div>
-          <div><span>😐</span>${rawgData.ratings.meh}</div>
-          <div><span>😡</span>${rawgData.ratings.bad}</div>
-        </div>
-      </div>`;
+//     const modalHeader = document.createElement("div");
+//     modalHeader.classList.add("modal-header");
 
-    // Affiche la modale
-    const modal = document.querySelector(".modal");
-    modal.innerHTML = modalContent;
-    modal.classList.add("open");
-  } catch (error) {
-    console.error(error.message);
-  }
-}
+//     const gameTitle = document.createElement("h2");
+//     gameTitle.innerText = rawgData.name;
+
+//     const closeButton = document.createElement("span");
+//     closeButton.innerText = "X";
+//     closeButton.addEventListener("click", closeModal);
+
+//     const modalContent = document.createElement("div");
+//     modalContent.classList.add("modal-content");
+
+//     const prixNormal = document.createElement("p");
+//     prixNormal.innerHTML =
+//       "Prix normal " + cheapSharkData.normalPrice || "Non disponible";
+//     const prixMoins = document.createElement("p");
+//     prixMoins.innerHTML =
+//       "Prix le moins cher :" + cheapSharkData.cheapestPrice || "Non disponible";
+
+//     modalHeader.append(gameTitle, closeButton, prixNormal, prixMoins);
+
+//     const carousel = document.createElement("div");
+//     carousel.classList.add("carousel");
+//     carousel.innerHTML =
+//       rawgData.screenshots + map((screenshot = img.src = screenshot));
+//     join("");
+//     const reviews = document.createElement("div");
+//     reviews.classList.add("reviews");
+//     const ratingG = document.createElement("div");
+//     ratingG.innerHTML`
+//         </div>
+//         <div class="reviews">
+//           <div><span>😍</span>${rawgData.ratings.love}</div>
+//           <div><span>🙂</span>${rawgData.ratings.good}</div>
+//           <div><span>😐</span>${rawgData.ratings.meh}</div>
+//           <div><span>😡</span>${rawgData.ratings.bad}</div>
+//         </div>
+//       </div>
+//     `;
+
+//     // Affiche la modale
+//     const modal = document.querySelector(".modal");
+//     modal.innerHTML = modalContent;
+//     modal.classList.add("open");
+//   } catch (error) {
+//     console.error(error.message);
+//   }
+// }
 
 // Récupère les données d'un jeu sur RAWG
 async function fetchRawgData(gameName) {

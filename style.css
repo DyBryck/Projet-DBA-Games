@@ -167,6 +167,12 @@ nav a {
   color: var(--text-color);
 }
 
+.genres-container {
+  overflow-y: auto;
+  height: 62%;
+  gap: 0.6rem;
+}
+
 .modal.open {
   display: block;
 }
