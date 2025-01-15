@@ -269,6 +269,7 @@ async function fetchAPI(url, headers = {}) {
 }
 
 let genres = [];
+let platforms = [];
 
 const fetchGenres = async () => {
   const url = `https://api.rawg.io/api/genres?key=${API_KEY_RAWG}`;
@@ -296,3 +297,31 @@ const fetchGamesFromGenre = async (id) => {
   const data = await fetchAPI(url);
   displayGames(data.results);
 };
+
+
+const fetchPlatforms = async () => {
+  const url = `https://api.rawg.io/api/platforms?key=${API_KEY_RAWG}`;
+  const response = await fetch(url);
+  const data = await response.json();
+  platforms = data.results;
+  displayPlatforms();
+};
+
+const displayPlatforms = () => {
+  const platformsContainer = document.querySelector(".platforms-container");
+  platforms.forEach((platform) => {
+    const platformShow = document.createElement("a");
+    platformShow.classList.add("links-Grey");
+    platformShow.innerText = platform.name;
+    platformsContainer.appendChild(platformShow);
+    platformShow.addEventListener("click", () => fetchGamesFromPlatform(platform.id));
+  });
+};
+
+const fetchGamesFromPlatform = async (id) => {
+  const url = `https://api.rawg.io/api/games?key=${API_KEY_RAWG}&platforms=${id}&page_size=8`;
+  const data = await fetchAPI(url);
+  displayGames(data.results);
+};
+
+fetchPlatforms();
