@@ -265,12 +265,23 @@ async function fetchAPI(url, headers = {}) {
   }
 }
 
+let genres = [];
+
 const fetchGenres = async () => {
   const url = `https://api.rawg.io/api/genres?key=${API_KEY_RAWG}`;
   const response = await fetch(url);
   const data = await response.json();
-  console.log(data);
-  return data.results;
+  genres = data.results;
+  console.log(genres);
 };
 
-const genres = fetchGenres();
+fetchGenres();
+
+const displayGenre = () => {
+  const genresContainer = document.querySelector(".genres-container");
+  genres.forEach((genre) => console.log(genre));
+};
+
+const fetchGamesFromGenre = async (id) => {
+  const url = `https://api.rawg.io/api/genres/${id}`;
+};
