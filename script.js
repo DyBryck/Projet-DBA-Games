@@ -130,6 +130,7 @@ async function openModal(gameName) {
     //  Affiche la modale
     showLoader(false);
     const modal = document.querySelector(".modal");
+    modal.innerHTML = "";
     modal.append(modalHeader, modalContent);
     modal.classList.add("open");
   } catch (error) {
